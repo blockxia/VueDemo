@@ -9,11 +9,10 @@
 </template>
 
 <script>
-  import PubSub from 'pubsub-js'
     export default {
       props:{
         todo:Object,
-//        deleteTodo:Function,
+        deleteTodo:Function,
         index:Number
       },
       data(){
@@ -32,9 +31,6 @@
             this.bgColor='white'
           }
         }
-      },
-      deleteTodo(){
-        PubSub.publish('deleteTodo',this.index)
       }
     }
 </script>

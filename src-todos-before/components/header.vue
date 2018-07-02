@@ -8,10 +8,10 @@
 <script>
     export default {
       props:{
-        /*addTodo:{
+        addTodo:{
           type:Function,
           required:true
-        }*/
+        }
       },
        data(){
         return {
@@ -29,8 +29,7 @@
             completed:false
           }
 
-//          this.addTodo(todo)
-          this.$emit('addTodo',todo)
+          this.addTodo(todo)
            this.inputTodo=''
         }
       }

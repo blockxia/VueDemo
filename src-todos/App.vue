@@ -1,33 +1,50 @@
 <template>
   <div class="todo-container">
     <div class="todo-wrap">
-      <TodoHeader :addTodo="addTodo"/>
-      <List :todos="todos" :deleteTodo="deleteTodo"/>
-      <TodoFooter :todos="todos" :deleteCompleted="deleteCompleted" :selectAll="selectAll"/>
+      <TodoHeader @addTodo="addTodo"/>
+      <List :todos="todos" />
+      <TodoFooter>
+        <input type="checkbox" v-model="isCheck" slot="check"/>
+        <span slot="count">已完成{{completedCount}} / 全部{{todos.length}}</span>
+        <button class="btn btn-danger" v-show="completedCount" @click="deleteCompleted" slot="btn">清除已完成任务</button>
+      </TodoFooter>
     </div>
   </div>
 </template>
 
 <script>
+  import PubSub from 'pubsub-js'
   import Header from './components/header.vue'
   import List from './components/list.vue'
   import Footer from './components/footer.vue'
-
+  import storgeUtil from './util/storgeUtil'
   export default{
     data(){
       return{
-        todos:[
-          {title: '吃饭', completed: false},
-          {title: '睡觉', completed: true},
-          {title: '打代码', completed: false}
-        ]
+        todos:storgeUtil.readTodos()
       }
     },
-     components:{
-       TodoHeader:Header,
-       List,
-       TodoFooter:Footer
-     },
+    computed: {
+      completedCount () { // 完成的数量
+        return this.todos.reduce((preTotal, todo) => preTotal + (todo.completed?1:0), 0)
+      },
+
+      isCheck: {
+        get () {
+          return this.todos.length===this.completedCount && this.completedCount>0
+        },
+
+        set (value) {
+          // 进行全选或全不选
+          this.selectAll(value)
+        }
+      }
+    },
+    mounted () {
+      PubSub.subscribe('deleteTodo',(msg,index)=>{
+        this.deleteTodo(index)
+      })
+    },
     methods:{
       addTodo (todo) {
         this.todos.unshift(todo)
@@ -42,7 +59,23 @@
       selectAll(check){
         this.todos.forEach(todo=>todo.completed=check)
       }
-    }
+    },
+
+
+    watch:{
+      todos:{
+        deep:true,
+
+        handler:storgeUtil.saveTodos
+
+      }
+    },
+     components:{
+       TodoHeader:Header,
+       List,
+       TodoFooter:Footer
+     },
+
   }
 </script>
 
