@@ -45,5 +45,6 @@ export default new VueRouter({
       path:'/',
       redirect:'/about'
     }
-  ]
+  ],
+ // mode:'history' h5新语法，可以去掉地址里的#号
 })
