@@ -32,6 +32,10 @@ export default new VueRouter({
               component:MessageDetail
             }
           ]
+        },
+        {
+          path:'',
+          redirect:'/home/news'
         }
       ]
     },
