@@ -28,9 +28,8 @@
             title:inputTodo,
             completed:false
           }
-
 //          this.addTodo(todo)
-          this.$emit('addTodo',todo)
+            this.$emit('addTodo',todo)
            this.inputTodo=''
         }
       }
